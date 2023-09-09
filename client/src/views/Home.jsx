@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import Field from "../components/Field";
-import { createAnswer } from "../services/fetch-data";
+import { createAnswer, getAllAnswers } from "../services/fetch-data";
 
-export default function Home({ form }) {
+export default function Home({ form, setAnswers }) {
   const transformData = {};
   form?.items?.forEach((item) => {
     if (item.name) {
@@ -25,7 +25,11 @@ export default function Home({ form }) {
     try {
       const result = await createAnswer(inputs);
       console.log(result);
-      alert("answer sent successfully");
+      if (result) {
+        const dataAnswers = await getAllAnswers();
+        setAnswers(dataAnswers);
+        alert("answer sent successfully");
+      }
     } catch (error) {
       console.error(error);
     }
