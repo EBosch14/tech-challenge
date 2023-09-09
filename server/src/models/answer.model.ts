@@ -1,14 +1,17 @@
 import { InferSchemaType, Schema, model } from "mongoose";
 
+const answerItemSchema = new Schema(
+  {
+    label: { type: String, required: true },
+    value: { type: String, required: false },
+  },
+  { _id: false }
+);
+
 const answerSchema = new Schema(
   {
     items: {
-      type: [
-        {
-          label: { type: String, required: true },
-          value: { type: String, required: true },
-        },
-      ],
+      type: [answerItemSchema],
       required: true,
     },
   },
