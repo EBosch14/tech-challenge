@@ -15,6 +15,6 @@ const answerSchema = new Schema(
   { timestamps: true }
 );
 
-type TAnswers = InferSchemaType<typeof answerSchema>;
+export type TAnswers = InferSchemaType<typeof answerSchema>;
 console.log();
 export default model<TAnswers>("Answers", answerSchema);
