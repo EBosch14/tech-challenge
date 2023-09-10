@@ -2,7 +2,7 @@ import axios from "axios";
 
 export const getForm = async () => {
   try {
-    const response = await axios.get("/api/api/form");
+    const response = await axios.get("/api/form");
     if (response.status >= 200 && response.status < 300) {
       const data = response.data;
       return data;
@@ -15,7 +15,7 @@ export const getForm = async () => {
 
 export const getAllAnswers = async () => {
   try {
-    const response = await axios.get("/api/api/answers");
+    const response = await axios.get("/api/answers");
     if (response.status >= 200 && response.status < 300) {
       const data = response.data;
       return data;
@@ -33,7 +33,7 @@ export const createAnswer = async (data) => {
   }));
 
   try {
-    const response = await axios.post("/api/api/answers", {
+    const response = await axios.post("/api/answers", {
       items: transformedData,
     });
     if (response.status >= 200 && response.status < 300) {
@@ -48,7 +48,7 @@ export const createAnswer = async (data) => {
 
 export const updateAnswer = async (data) => {
   try {
-    const response = await axios.patch(`/api/api/answers/${data.id}`, {
+    const response = await axios.patch(`/api/answers/${data.id}`, {
       items: data.items.map((item) => ({
         label: item.name,
         value: item.value,
