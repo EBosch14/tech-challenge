@@ -6,9 +6,10 @@ import { TypeOf, z } from "zod";
 
 const BasicInputSchema = z
   .object({
-    name: z.string().min(3).max(20),
-    label: z.string().min(3).max(30),
+    name: z.string().min(3).max(30),
+    label: z.string().min(3).max(70),
     response: z.union([z.string(), z.number()]).optional(),
+    required: z.boolean().optional(),
   })
   .strict();
 
@@ -18,8 +19,8 @@ const RadioOrSelectSchema = z
     options: z
       .array(
         z.object({
-          label: z.string().min(3).max(20),
-          value: z.string().max(20),
+          label: z.string().min(3).max(35),
+          value: z.string().max(25),
         })
       )
       .min(1)

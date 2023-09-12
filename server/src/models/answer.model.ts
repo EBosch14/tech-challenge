@@ -15,6 +15,7 @@ const answerItemSchema = new mongoose.Schema({
   name: { type: String, required: true },
   label: { type: String, required: true },
   response: { type: mongoose.Schema.Types.Mixed, required: false, default: "" },
+  required: { type: Boolean, required: false, default: false },
 });
 
 answerItemSchema.pre("save", function (next) {
