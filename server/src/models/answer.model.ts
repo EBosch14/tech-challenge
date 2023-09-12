@@ -1,7 +1,7 @@
-import { InputsType, IItemAnswer, IAnswer } from "../interfaces/Form.interface";
+import { InputsType } from "../interfaces/Form.interface";
 import mongoose from "mongoose";
 
-const answerItemSchema = new mongoose.Schema<IItemAnswer>({
+const answerItemSchema = new mongoose.Schema({
   type: { type: String, enum: InputsType, required: true },
   options: {
     type: [
@@ -10,13 +10,14 @@ const answerItemSchema = new mongoose.Schema<IItemAnswer>({
         value: { type: String, required: true },
       },
     ],
+    default: undefined,
   },
   name: { type: String, required: true },
   label: { type: String, required: true },
   response: { type: mongoose.Schema.Types.Mixed, required: false, default: "" },
 });
 
-answerItemSchema.pre<IItemAnswer>("save", function (next) {
+answerItemSchema.pre("save", function (next) {
   if (typeof this.response !== "string" && typeof this.response !== "number") {
     next(new Error("Response must be a string or number"));
   } else {
@@ -24,7 +25,7 @@ answerItemSchema.pre<IItemAnswer>("save", function (next) {
   }
 });
 
-const answerSchema = new mongoose.Schema<IAnswer>(
+const answerSchema = new mongoose.Schema(
   {
     items: {
       type: [answerItemSchema],
