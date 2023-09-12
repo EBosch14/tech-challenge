@@ -34,12 +34,11 @@ export default function Field({
           {item.label || "fill the field: "}{" "}
           {item.required && <strong className="ml-2">(Is required)</strong>}
         </span>
-        <div className="flex items-center gap-10 flex-wrap">
+        <div className="flex items-center gap-x-10 gap-y-2 flex-wrap">
           {item.options?.map((option) => (
             <div
-              key={option._id}
-              className="flex items-center justify-center gap"
-              onChange={() => handleInput(event, item._id)}>
+              key={option._id || option.value}
+              className="flex items-center justify-center gap">
               <input
                 checked={option.value === input?.response}
                 className="m-0 text-lg"
@@ -48,6 +47,7 @@ export default function Field({
                 value={option.value}
                 name={item.name || "radio_input"}
                 disabled={disabled}
+                onChange={() => handleInput(event, item._id)}
               />
               <label className="cursor-pointer pl-2" htmlFor={option._id}>
                 {option.label}

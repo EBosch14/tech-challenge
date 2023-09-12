@@ -26,15 +26,10 @@ export const getAllAnswers = async () => {
   }
 };
 
-export const createAnswer = async (data) => {
-  const transformedData = Object.entries(data).map(([key, value]) => ({
-    label: key,
-    value: value,
-  }));
-
+export const createAnswer = async (items) => {
   try {
     const response = await axios.post("/api/answers", {
-      items: transformedData,
+      items,
     });
     if (response.status >= 200 && response.status < 300) {
       const data = response.data;
@@ -49,7 +44,10 @@ export const createAnswer = async (data) => {
 export const updateAnswer = async (id, items) => {
   try {
     const response = await axios.patch(`/api/answers/${id}`, {
-      items,
+      items: items.map((item) => ({
+        ...item,
+        required: undefined,
+      })),
     });
     if (response.status >= 200 && response.status < 300) {
       const data = response.data;
