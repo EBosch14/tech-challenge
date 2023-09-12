@@ -6,6 +6,7 @@ import {
 } from "../services/answers.service";
 import createHttpError from "http-errors";
 import mongoose from "mongoose";
+import { IItemAnswer } from "../interfaces/Form.interface";
 
 export const getAnswers: RequestHandler = async (_req, res, next) => {
   try {
@@ -17,7 +18,7 @@ export const getAnswers: RequestHandler = async (_req, res, next) => {
 };
 
 export const getAnswer: RequestHandler<
-  { id: mongoose.ObjectId },
+  { id: mongoose.Types.ObjectId },
   unknown,
   unknown,
   unknown
@@ -38,7 +39,7 @@ export const getAnswer: RequestHandler<
 };
 
 interface ICreateAnswerBody {
-  items?: [{ label: string; value?: string }];
+  items?: [IItemAnswer];
 }
 
 export const postAnswers: RequestHandler<
@@ -50,17 +51,6 @@ export const postAnswers: RequestHandler<
   const { items } = req.body;
 
   try {
-    if (!items || !items.length)
-      throw createHttpError(400, "Answers must be have a items");
-
-    if (!items.every((item) => "label" in item && "value" in item))
-      throw createHttpError(
-        400,
-        "Elements must have the properties: 'label' and 'value'."
-      );
-    if (!items.every((item) => item.label !== ""))
-      throw createHttpError(400, "Prop 'label' cannot be empty");
-
     const createdAnswer = await createNewAnswer(items);
     res.status(201).json(createdAnswer);
   } catch (error) {
@@ -78,21 +68,19 @@ export const pathAnswer: RequestHandler<
   IUpdateAnswer,
   unknown
 > = async (req, res, next) => {
-  const idAnswer = req.params.id;
-  const { items } = req.body;
+  // const idAnswer = req.params.id;
+  // const { items } = req.body;
   try {
-    if (!mongoose.isValidObjectId(idAnswer))
-      throw createHttpError(400, "Invalid answer id");
-    if (!items || !items.length) throw createHttpError(400, "No items data");
-
-    const answer = await findAnswerById(idAnswer);
-    if (!answer) throw createHttpError(404, "Answer not found");
-
-    if (answer instanceof mongoose.Document) {
-      answer.items = items;
-      const updatedAnswer = await answer.save();
-      return res.status(200).json(updatedAnswer);
-    } else throw createHttpError(500, "Error to update answer.");
+    // if (!mongoose.isValidObjectId(idAnswer))
+    //   throw createHttpError(400, "Invalid answer id");
+    // if (!items || !items.length) throw createHttpError(400, "No items data");
+    // const answer = await findAnswerById(idAnswer);
+    // if (!answer) throw createHttpError(404, "Answer not found");
+    // if (answer instanceof mongoose.Document) {
+    //   answer.items = items;
+    //   const updatedAnswer = await answer.save();
+    //   return res.status(200).json(updatedAnswer);
+    // } else throw createHttpError(500, "Error to update answer.");
   } catch (error) {
     next(error);
   }

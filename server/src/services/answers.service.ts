@@ -1,18 +1,19 @@
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
 import AnswerModel, { TAnswers } from "../models/answer.model";
+import { IItemAnswer } from "../interfaces/Form.interface";
 
 export const findAllAnswers = async () => {
   return await AnswerModel.find().exec();
 };
 
 export const findAnswerById = async (
-  id: ObjectId
+  id: Types.ObjectId
 ): Promise<TAnswers | null> => {
   return await AnswerModel.findById(id).exec();
 };
 
 export const createNewAnswer = async (
-  items: [{ label: string; value?: string }]
+  items: [IItemAnswer] | undefined
 ): Promise<TAnswers> => {
   const newAnswer = new AnswerModel({
     items,

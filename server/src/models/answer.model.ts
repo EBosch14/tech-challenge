@@ -1,14 +1,30 @@
-import { InferSchemaType, Schema, model } from "mongoose";
+import { InputsType, IItemAnswer, IAnswer } from "../interfaces/Form.interface";
+import mongoose from "mongoose";
 
-const answerItemSchema = new Schema(
-  {
-    label: { type: String, required: true },
-    value: { type: String, required: false },
+const answerItemSchema = new mongoose.Schema<IItemAnswer>({
+  type: { type: String, enum: InputsType, required: true },
+  options: {
+    type: [
+      {
+        label: { type: String, required: true },
+        value: { type: String, required: true },
+      },
+    ],
   },
-  { _id: false }
-);
+  name: { type: String, required: true },
+  label: { type: String, required: true },
+  response: { type: mongoose.Schema.Types.Mixed, required: false, default: "" },
+});
 
-const answerSchema = new Schema(
+answerItemSchema.pre<IItemAnswer>("save", function (next) {
+  if (typeof this.response !== "string" && typeof this.response !== "number") {
+    next(new Error("Response must be a string or number"));
+  } else {
+    next();
+  }
+});
+
+const answerSchema = new mongoose.Schema<IAnswer>(
   {
     items: {
       type: [answerItemSchema],
@@ -18,6 +34,5 @@ const answerSchema = new Schema(
   { timestamps: true }
 );
 
-export type TAnswers = InferSchemaType<typeof answerSchema>;
-console.log();
-export default model<TAnswers>("Answers", answerSchema);
+export type TAnswers = mongoose.InferSchemaType<typeof answerSchema>;
+export default mongoose.model<TAnswers>("Answers", answerSchema);

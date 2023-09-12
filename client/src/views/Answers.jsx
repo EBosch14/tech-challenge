@@ -8,9 +8,9 @@ export default function Answers({ answers, setAnswers }) {
   });
   const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => {
-    console.log(editFields);
-  }, [editFields]);
+  // useEffect(() => {
+  //   console.log(editFields);
+  // }, [editFields]);
 
   const handleEditClick = async (id) => {
     if (!isEditing && editFields.id === "") {
@@ -45,9 +45,8 @@ export default function Answers({ answers, setAnswers }) {
     }
   };
 
-  const handleChange = (e, id) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    console.log(name, value);
     setEditFields((prevEditFields) => {
       const updatedItems = prevEditFields.items.map((item) => {
         if (item.name === name) {
@@ -94,7 +93,7 @@ export default function Answers({ answers, setAnswers }) {
                           (field) => field.name === item.label
                         ).value
                       }
-                      onChange={(e) => handleChange(e, answer._id)}
+                      onChange={handleChange}
                       name={item.label}
                     />
                   ) : (
