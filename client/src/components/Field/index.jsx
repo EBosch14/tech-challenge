@@ -40,7 +40,7 @@ export default function Field({
               key={option._id || option.value}
               className="flex items-center justify-center gap">
               <input
-                checked={option.value === input?.response}
+                checked={option.value === (input ? input.response : "")}
                 className="m-0 text-lg"
                 type="radio"
                 id={option._id}
@@ -65,13 +65,12 @@ export default function Field({
           {item.required && <strong className="ml-2">(Is required)</strong>}
         </span>
         <input
-          checked={input?.response || item.response}
           id={item._id}
           className="text-lg"
           type={item.type || "text"}
           name={item.name || "text_input"}
           onChange={() => handleInput(event, item._id)}
-          value={input ? input.response : item.response}
+          value={input ? input.response : item?.response || ""}
           disabled={disabled}
         />
       </>

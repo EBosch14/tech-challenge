@@ -30,10 +30,17 @@ export default function Answers({ answers, setAnswers }) {
   };
 
   const handleInput = (event, id) => {
-    const { value } = event.target;
+    const { value, type, checked } = event.target;
     setInputs((prevState) => {
       return prevState.map((input) => {
         if (input._id === id) {
+          if (type === "checkbox") {
+            console.log(type, checked, value);
+            return {
+              ...input,
+              response: checked ? "yes" : "no",
+            };
+          }
           return {
             ...input,
             response: value,
@@ -66,7 +73,9 @@ export default function Answers({ answers, setAnswers }) {
     setInputs([]);
   };
 
-  useEffect(() => {}, [formIsEditing, inputs]);
+  useEffect(() => {
+    console.log(inputs);
+  }, [formIsEditing, inputs]);
 
   return (
     <main className="flex flex-col w-full gap-5">

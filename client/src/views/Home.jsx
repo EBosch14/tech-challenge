@@ -12,6 +12,7 @@ export default function Home({ form, setAnswers }) {
       return prevState.map((input) => {
         if (input.name === name) {
           if (type === "checkbox") {
+            console.log(checked, value, name);
             return {
               ...input,
               response: checked ? "yes" : "no",
