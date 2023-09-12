@@ -46,13 +46,10 @@ export const createAnswer = async (data) => {
   }
 };
 
-export const updateAnswer = async (data) => {
+export const updateAnswer = async (id, items) => {
   try {
-    const response = await axios.patch(`/api/answers/${data.id}`, {
-      items: data.items.map((item) => ({
-        label: item.name,
-        value: item.value,
-      })),
+    const response = await axios.patch(`/api/answers/${id}`, {
+      items,
     });
     if (response.status >= 200 && response.status < 300) {
       const data = response.data;

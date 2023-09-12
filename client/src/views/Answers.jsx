@@ -1,114 +1,120 @@
 import { useEffect, useState } from "react";
 import { getAllAnswers, updateAnswer } from "../services/fetch-data";
+import Field from "../components/Field";
 
 export default function Answers({ answers, setAnswers }) {
-  const [editFields, setEditFields] = useState({
-    id: "",
-    items: [],
+  const [formIsEditing, setFormIsEditing] = useState({
+    formId: "",
+    state: false,
   });
-  const [isEditing, setIsEditing] = useState(false);
+  const [inputs, setInputs] = useState([]);
 
-  // useEffect(() => {
-  //   console.log(editFields);
-  // }, [editFields]);
-
-  const handleEditClick = async (id) => {
-    if (!isEditing && editFields.id === "") {
-      const index = answers.findIndex((answer) => answer._id === id);
-      console.log(index);
-      setEditFields({
-        id: id,
-        items: answers[index].items.map((item) => ({
-          name: item.label,
-          value: item.value,
-        })),
+  const handleClick = (event, formId, items) => {
+    if (!formIsEditing.state && formIsEditing.formId === "") {
+      setFormIsEditing({
+        formId: formId,
+        state: true,
       });
-      setIsEditing(true);
-    }
-    if (isEditing && editFields.id === id) {
-      try {
-        const response = await updateAnswer(editFields);
-        const updatedData = await getAllAnswers();
-        setAnswers(updatedData);
-        console.log(response);
-      } catch (error) {
-        console.error(error);
-      }
-      setEditFields({
-        id: "",
-        items: [],
+      const transformInputs = items.map((item) => ({
+        _id: item._id,
+        response: item.response,
+      }));
+      setInputs(transformInputs);
+    } else if (formIsEditing.state && formIsEditing.formId === formId) {
+      setFormIsEditing({
+        formId: "",
+        state: false,
       });
-      setIsEditing(false);
-    }
-    if (isEditing && editFields.id !== id) {
-      return;
+      setInputs([]);
     }
   };
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEditFields((prevEditFields) => {
-      const updatedItems = prevEditFields.items.map((item) => {
-        if (item.name === name) {
+  const handleInput = (event, id) => {
+    const { value } = event.target;
+    setInputs((prevState) => {
+      return prevState.map((input) => {
+        if (input._id === id) {
           return {
-            ...item,
-            value: value,
+            ...input,
+            response: value,
           };
         }
-        return item;
+        return input;
       });
-
-      return {
-        ...prevEditFields,
-        items: updatedItems,
-      };
     });
   };
+
+  const handleSubmit = async (formId, items) => {
+    const itemsChanged = inputs.filter((input) => {
+      const foundedItem = items.find((item) => item._id === input._id);
+      return foundedItem.response !== input.response;
+    });
+    if (
+      formIsEditing.formId === formId &&
+      formIsEditing.state &&
+      itemsChanged.length > 0
+    ) {
+      await updateAnswer(formId, itemsChanged);
+      const updatedForms = await getAllAnswers();
+      setAnswers(updatedForms);
+      console.log("send!");
+    }
+    setFormIsEditing({
+      formId: "",
+      state: false,
+    });
+    setInputs([]);
+  };
+
+  useEffect(() => {}, [formIsEditing, inputs]);
 
   return (
     <main className="flex flex-col w-full">
       <h1 className="text-lg">See all the answers</h1>
-      <section className="flex flex-col gap-10">
-        {answers?.map((answer) => (
+      <section className="flex flex-col gap-10 bg-zinc-900 p-4 rounded-3xl">
+        {answers.map((answer) => (
           <article
             key={answer._id}
-            className="flex flex-col w-full rounded-md bg-slate-900 gap-4 p-10">
-            <h2 className="m-0 mb-2">
-              <span className="uppercase">Answer id: </span>
-              {answer._id}
-            </h2>
-            {answer.items.map((item, index) => (
+            className="flex flex-col justify-between items-center gap-10 bg-zinc-950 py-8 pb-4 rounded-2xl">
+            {answer.items.map((item) => (
               <div
-                key={index + answer._id}
-                className="flex flex-col rounded overflow-hidden text-xl">
-                <h3 className="bg-blue-200 m-0 p-4 text-black">
-                  {item.label || "No item label"}
-                </h3>
-                <p className="bg-slate-600 m-0 p-4">
-                  {editFields.id === answer._id ? (
-                    <input
-                      type="text"
-                      value={
-                        editFields.items.find(
-                          (field) => field.name === item.label
-                        ).value
-                      }
-                      onChange={handleChange}
-                      name={item.label}
-                    />
-                  ) : (
-                    item.value || "No response"
-                  )}
-                </p>
+                key={item._id}
+                className="w-2/3 flex flex-col text-xl gap-2 text-left">
+                <Field
+                  item={item}
+                  disabled={
+                    formIsEditing.formId !== answer._id ||
+                    formIsEditing.state === false
+                  }
+                  input={inputs.find((val) => val._id === item._id)}
+                  handleInput={handleInput}
+                />
               </div>
             ))}
-            <button
-              onClick={() => handleEditClick(answer._id)}
-              className="w-full bg-blue-700 rounded-t-none hover:bg-blue-800">
-              {editFields.id === answer._id
-                ? "Save changes"
-                : "Edit this response"}
-            </button>
+            <footer className="w-2/3 pt-8 flex flex-row gap-4 items-center justify-center">
+              <button
+                className="text-xl"
+                disabled={
+                  formIsEditing.formId !== answer._id &&
+                  formIsEditing.state === true
+                }
+                onClick={(event) =>
+                  handleClick(event, answer._id, answer.items)
+                }>
+                {formIsEditing.formId === answer._id &&
+                formIsEditing.state === true
+                  ? "Cancel"
+                  : "Edit this from"}
+              </button>
+              {formIsEditing.formId === answer._id &&
+                formIsEditing.state === true && (
+                  <button
+                    onClick={() => handleSubmit(answer._id, answer.items)}
+                    className="text-xl">
+                    Update
+                  </button>
+                )}
+            </footer>
           </article>
         ))}
       </section>
