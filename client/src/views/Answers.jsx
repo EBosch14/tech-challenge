@@ -69,9 +69,9 @@ export default function Answers({ answers, setAnswers }) {
   useEffect(() => {}, [formIsEditing, inputs]);
 
   return (
-    <main className="flex flex-col w-full">
-      <h1 className="text-lg">See all the answers</h1>
-      <section className="flex flex-col gap-10 bg-zinc-900 p-4 rounded-3xl">
+    <main className="flex flex-col w-full gap-5">
+      <h1 className="text-3xl mt-10">See all the answers</h1>
+      <section className="flex flex-col-reverse gap-10 bg-zinc-900 p-4 rounded-3xl">
         {answers.map((answer) => (
           <article
             key={answer._id}
