@@ -4,9 +4,7 @@ export default function Field({
   disabled = false,
   input,
 }) {
-  if (item.type === "submit") {
-    return <input type="submit" placeholder={item.label} disabled={disabled} />;
-  } else if (item.type === "select") {
+  if (item.type === "select") {
     return (
       <>
         <span className="ml-5">

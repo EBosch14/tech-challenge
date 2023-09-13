@@ -73,9 +73,7 @@ export default function Answers({ answers, setAnswers }) {
     setInputs([]);
   };
 
-  useEffect(() => {
-    console.log(inputs);
-  }, [formIsEditing, inputs]);
+  useEffect(() => {}, [formIsEditing, inputs]);
 
   return (
     <main className="flex flex-col w-full gap-5">

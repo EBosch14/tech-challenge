@@ -2,9 +2,8 @@ import { useEffect, useState } from "react";
 import Field from "../components/Field";
 import { createAnswer, getAllAnswers } from "../services/fetch-data";
 
-export default function Home({ form, setAnswers }) {
+export default function Home({ form, setAnswers, handleForm }) {
   const [inputs, setInputs] = useState([]);
-  // console.log(form.items);
 
   const handleInput = (event) => {
     const { name, value, type, checked } = event.target;
@@ -12,7 +11,6 @@ export default function Home({ form, setAnswers }) {
       return prevState.map((input) => {
         if (input.name === name) {
           if (type === "checkbox") {
-            console.log(checked, value, name);
             return {
               ...input,
               response: checked ? "yes" : "no",
@@ -65,6 +63,9 @@ export default function Home({ form, setAnswers }) {
   return (
     <main className="flex flex-col w-full gap-5">
       <h1 className="text-3xl mt-10">Customs Forms</h1>
+      <nav>
+        <button onClick={handleForm}>Get a random form</button>
+      </nav>
       <section className="flex flex-col gap-10 bg-zinc-900 p-4 rounded-3xl">
         <form
           className="flex flex-col justify-between items-center gap-10 bg-zinc-950 py-8 pb-4 rounded-2xl"
@@ -84,6 +85,9 @@ export default function Home({ form, setAnswers }) {
               />
             </div>
           ))}
+          <button type="submit" className="text-xl bg-custom-button">
+            Submit
+          </button>
         </form>
       </section>
     </main>

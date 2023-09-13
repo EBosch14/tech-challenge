@@ -1,8 +1,8 @@
 import axios from "axios";
 
-export const getForm = async () => {
+export const getRandomForm = async () => {
   try {
-    const response = await axios.get("/api/form");
+    const response = await axios.get("/api/form/random");
     if (response.status >= 200 && response.status < 300) {
       const data = response.data;
       return data;
