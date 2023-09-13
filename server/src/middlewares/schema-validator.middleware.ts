@@ -7,9 +7,6 @@ export const schemaValidator =
   (schema: AnyZodObject) =>
   (req: Request, res: Response, next: NextFunction) => {
     try {
-      console.log(
-        schema.parse({ body: req.body, query: req.query, params: req.params })
-      );
       schema.parse({ body: req.body, query: req.query, params: req.params });
       next();
     } catch (error: unknown) {

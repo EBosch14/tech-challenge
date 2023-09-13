@@ -35,7 +35,7 @@ export default function Answers({ answers, setAnswers }) {
       return prevState.map((input) => {
         if (input._id === id) {
           if (type === "checkbox") {
-            console.log(type, checked, value);
+            // console.log(type, checked, value);
             return {
               ...input,
               response: checked ? "yes" : "no",

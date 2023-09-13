@@ -6,11 +6,11 @@ export default function Home({ form, setAnswers, handleForm }) {
   const [inputs, setInputs] = useState([]);
   const [formComplete, setFormComplete] = useState(false);
 
-  const handleInput = (event) => {
-    const { name, value, type, checked } = event.target;
+  const handleInput = (event, id) => {
+    const { value, type, checked } = event.target;
     setInputs((prevState) => {
       return prevState.map((input) => {
-        if (input.name === name) {
+        if (input._id === id) {
           if (type === "checkbox") {
             return {
               ...input,
@@ -82,10 +82,7 @@ export default function Home({ form, setAnswers, handleForm }) {
                 item={item}
                 handleInput={handleInput}
                 handleSubmit={handleSubmit}
-                input={inputs?.find(
-                  (val) =>
-                    val?.name?.toLowerCase() === item?.name?.toLowerCase()
-                )}
+                input={inputs?.find((val) => val._id === item._id)}
               />
             </div>
           ))}
