@@ -1,8 +1,14 @@
 import express from "express";
-import { getForm } from "../controllers/form.controllers";
+import {
+  getRandomForm,
+  getForms,
+  postForm,
+} from "../controllers/form.controllers";
 
 const formRoutes = express.Router();
 
-formRoutes.get("/", getForm);
+formRoutes.get("/", getForms);
+formRoutes.post("/", postForm);
+formRoutes.get("/random", getRandomForm);
 
 export default formRoutes;

@@ -1,26 +1,30 @@
 import { InputsType } from "../interfaces/Form.interface";
 import mongoose from "mongoose";
 
-const answerItemSchema = new mongoose.Schema({
+const optionSchema = {
+  label: { type: String, required: true },
+  value: { type: String, required: true },
+};
+
+const commonSchema = {
   type: { type: String, enum: InputsType, required: true },
   options: {
-    type: [
-      {
-        label: { type: String, required: true },
-        value: { type: String, required: true },
-      },
-    ],
+    type: [optionSchema],
     default: undefined,
   },
   name: { type: String, required: true },
   label: { type: String, required: true },
-  response: { type: mongoose.Schema.Types.Mixed, required: false, default: "" },
   required: { type: Boolean, required: false, default: false },
+};
+
+const answerItemSchema = new mongoose.Schema({
+  ...commonSchema,
+  response: { type: String, required: false, default: "" },
 });
 
 answerItemSchema.pre("save", function (next) {
-  if (typeof this.response !== "string" && typeof this.response !== "number") {
-    next(new Error("Response must be a string or number"));
+  if (this.required && !this.response) {
+    next(new Error("Response is required"));
   } else {
     next();
   }
@@ -36,5 +40,14 @@ const answerSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+const formSchema = new mongoose.Schema({
+  items: {
+    type: [commonSchema],
+    required: true,
+  },
+});
+
 export type TAnswers = mongoose.InferSchemaType<typeof answerSchema>;
-export default mongoose.model<TAnswers>("Answers", answerSchema);
+export type TForm = mongoose.InferSchemaType<typeof formSchema>;
+export const AnswerModel = mongoose.model<TAnswers>("Answers", answerSchema);
+export const FormModel = mongoose.model<TForm>("Templates", formSchema);

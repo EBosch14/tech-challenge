@@ -13,7 +13,7 @@ const UpdateAsnwerSchema = z.object({
         .array(
           z.object({
             _id: ObjectIdSchema,
-            response: z.union([z.string(), z.number()]),
+            response: z.string().trim(),
           })
         )
         .min(1)

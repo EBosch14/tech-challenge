@@ -7,7 +7,7 @@ import {
 } from "../services/answers.service";
 import createHttpError from "http-errors";
 import mongoose from "mongoose";
-import { IItemAnswer } from "../interfaces/Form.interface";
+import { IAnswer } from "../interfaces/Form.interface";
 import { TUpdateAnswer } from "../schemas/update-answers.schema";
 
 export const getAnswers: RequestHandler = async (_req, res, next) => {
@@ -41,7 +41,7 @@ export const getAnswer: RequestHandler<
 };
 
 interface ICreateAnswerBody {
-  items?: [IItemAnswer];
+  items?: IAnswer;
 }
 
 export const postAnswers: RequestHandler<

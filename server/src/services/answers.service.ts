@@ -1,6 +1,6 @@
 import { Types } from "mongoose";
-import AnswerModel from "../models/answer.model";
-import { IItemAnswer } from "../interfaces/Form.interface";
+import { AnswerModel } from "../models/answer.model";
+import { IAnswer } from "../interfaces/Form.interface";
 
 export const findAllAnswers = async () => {
   return await AnswerModel.find().exec();
@@ -11,7 +11,7 @@ export const findAnswerById = async (id: Types.ObjectId) => {
   return foundedAnswer;
 };
 
-export const createNewAnswer = async (items: [IItemAnswer] | undefined) => {
+export const createNewAnswer = async (items: IAnswer | undefined) => {
   const newAnswer = new AnswerModel({
     items,
   });
@@ -20,7 +20,7 @@ export const createNewAnswer = async (items: [IItemAnswer] | undefined) => {
 
 interface IItemsUpdate {
   _id: string;
-  response: string | number;
+  response?: string;
 }
 
 export const updateAnswer = async (
@@ -32,6 +32,8 @@ export const updateAnswer = async (
   items?.forEach((itemUpdate) => {
     const item = foundedAnswer.items.find((item) => item.id === itemUpdate._id);
     if (!item) throw new Error("Item not found!");
+    if (item.required && !itemUpdate.response)
+      throw new Error(`Response is required for ${item.name}`);
     if (item.options) {
       const foundValue = item.options.find(
         (option) => option.value === itemUpdate.response

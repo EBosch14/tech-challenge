@@ -34,15 +34,14 @@ export interface IOption {
 
 export interface IItemForm {
   type: typeof InputsType;
-  name?: string;
+  name: string;
   label: string;
   options?: IOption[];
   required?: boolean;
 }
 
 export interface IItemAnswer extends IItemForm {
-  name: string;
-  response: string | number;
+  response: string;
 }
 
 export interface IForm {
