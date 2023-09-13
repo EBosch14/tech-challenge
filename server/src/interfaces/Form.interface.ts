@@ -38,6 +38,7 @@ export interface IItemForm {
   label: string;
   options?: IOption[];
   required?: boolean;
+  _id?: string;
 }
 
 export interface IItemAnswer extends IItemForm {

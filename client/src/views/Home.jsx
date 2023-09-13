@@ -4,6 +4,7 @@ import { createAnswer, getAllAnswers } from "../services/fetch-data";
 
 export default function Home({ form, setAnswers, handleForm }) {
   const [inputs, setInputs] = useState([]);
+  const [formComplete, setFormComplete] = useState(false);
 
   const handleInput = (event) => {
     const { name, value, type, checked } = event.target;
@@ -30,13 +31,15 @@ export default function Home({ form, setAnswers, handleForm }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const result = await createAnswer(inputs);
-      if (result) {
-        const dataAnswers = await getAllAnswers();
-        setAnswers(dataAnswers);
-        alert("answer sent successfully");
-        event.target.reset();
-        setInputs([]);
+      if (formComplete) {
+        const result = await createAnswer(inputs);
+        if (result) {
+          const dataAnswers = await getAllAnswers();
+          setAnswers(dataAnswers);
+          alert("answer sent successfully");
+          setInputs([]);
+          setFormComplete(false);
+        }
       }
     } catch (error) {
       console.error(error);
@@ -57,7 +60,8 @@ export default function Home({ form, setAnswers, handleForm }) {
   }, [form]);
 
   useEffect(() => {
-    // console.log(inputs);
+    const check = inputs?.every((input) => input.response || !input.required);
+    setFormComplete(check);
   }, [inputs]);
 
   return (
@@ -85,7 +89,10 @@ export default function Home({ form, setAnswers, handleForm }) {
               />
             </div>
           ))}
-          <button type="submit" className="text-xl bg-custom-button">
+          <button
+            disabled={!formComplete}
+            type="submit"
+            className="text-xl bg-custom-button">
             Submit
           </button>
         </form>
